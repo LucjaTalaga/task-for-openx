@@ -24,13 +24,15 @@ class MainField extends Component {
     areTitlesUnique = () => {
         const {posts} = this.state;
         const notUnique = [];
+        posts[10].title = 'lewactwu jak zwykle kończą się argumenty';
+        posts[22].title = 'lewactwu jak zwykle kończą się argumenty';
+        posts[44].title = 'lewactwu jak zwykle kończą się argumenty';
+        posts[11].title = 'radzę posłuchać Korwina, lewaku';
+        posts[93].title = 'radzę posłuchać Korwina, lewaku';
         let alreadyNotUnique;
-        console.log('funkcja odpalona');
         for (let i = 0; i < posts.length; i++) {
             alreadyNotUnique = false;
-            //console.log('główna pętla for działa '+posts[i].title);
             for (let j = 0; j < notUnique.length; j++) {
-                console.log('no, elo , pętla for dla alreadynotTrue');
                 if (posts[i].title === notUnique[j]) {
                     alreadyNotUnique = true;
                     break;
@@ -40,17 +42,42 @@ class MainField extends Component {
                 continue;
             else {
                 for (let j = 0; j < posts.length; j++) {
-                    let compare = posts[i].title===posts[j].title;
-                    //console.log("druga wewn pętla for "+compare);
-                    if(i !== j && posts[i].title === posts[j].title){
+                    if (i !== j && posts[i].title === posts[j].title) {
                         notUnique.push(posts[i].title);
                         break;
                     }
                 }
             }
         }
-        console.log(notUnique);
         return notUnique;
+    };
+    //funkcja, która każdemu użytkownikowi przyporządkowuje użytkownika mieszkającego najbliżej
+    closestNeighbour = () => {
+        const {users} = this.state;
+        const resultsArray = [];
+        const degreesToRadians = (degrees) => {
+            const PI = Math.PI;
+            return degrees * (PI / 180);
+        };
+        users.forEach(firstUser => {
+            let withWhoSmallestDistance;
+            let smallestDistance;
+            let firstLatitude = degreesToRadians(firstUser.address.geo.lat);
+            users.forEach(secondUser => {
+                if (firstUser !== secondUser) {
+                    let secondLatitude = degreesToRadians(secondUser.address.geo.lat);
+                    let longitudeDelta = degreesToRadians(secondUser.address.geo.lng - firstUser.address.geo.lng);
+                    let angle = Math.acos(Math.sin(firstLatitude) * Math.sin(secondLatitude) + Math.cos(firstLatitude) * Math.cos(secondLatitude) * Math.cos(longitudeDelta));
+                    let distance = 6371 * angle;
+                    if (!smallestDistance || distance < smallestDistance) {
+                        smallestDistance = distance;
+                        withWhoSmallestDistance = secondUser.name;
+                    }
+                }
+            });
+            resultsArray.push(`Najbliżej ${firstUser.name} mieszka ${withWhoSmallestDistance}`);
+        });
+        return resultsArray;
     };
 
     //Przy zamontowaniu komponentu pobierane są dane z API i zapisywane w state
@@ -93,13 +120,25 @@ class MainField extends Component {
                 <h1>Ładowanie danych ...</h1>
             )
         } else {
+            //tu sprawdzam czy są jakieś powtarzające się tytuły postów i w zależności od tego generuję odpowiedni komunikat
+            let areUniqueCommunicate;
+            const areUniqueData = this.areTitlesUnique();
+            if (areUniqueData.length > 0) {
+                areUniqueCommunicate = <>
+                    <h2>Posty, których tytuły nie są unikalne: </h2>
+                    <ul>{areUniqueData.map(title => <li>{title}</li>)}</ul>
+                </>
+            } else {
+                areUniqueCommunicate = <h2>Tytuły wszystkich postów są unikalne</h2>
+            }
             return (
                 <section>
                     <ul>
                         {this.howManyPosts().map(post => <li>{post}</li>
                         )}
                     </ul>
-                    <p>{this.areTitlesUnique()}</p>
+                    {areUniqueCommunicate}
+                    <ul>{this.closestNeighbour().map(result => <li>{result}</li>)}</ul>
                 </section>
             )
         }
