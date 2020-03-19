@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PostsCounter from "./PostsCounter";
 import UniqueTitles from "./UniqueTitles";
 import ClosestUser from "./ClosestUser";
+import getDataFromAPI from './api/GetDataFromAPI'
 
 class MainField extends Component {
     state = {
@@ -11,12 +12,7 @@ class MainField extends Component {
 
     //Przy zamontowaniu komponentu pobierane są dane z API i zapisywane w state
     componentDidMount() {
-        fetch("https://jsonplaceholder.typicode.com/posts").then(resp => {
-            if (resp.ok)
-                return resp.json();
-            else
-                throw new Error('Błąd sieci');
-        }).then(resp => {
+        getDataFromAPI('posts').then(resp => {
             this.setState({
                 posts: resp
             });
@@ -24,13 +20,7 @@ class MainField extends Component {
             console.log('Błąd!', err);
         });
 
-        fetch("https://jsonplaceholder.typicode.com/users"
-        ).then(resp => {
-            if (resp.ok)
-                return resp.json();
-            else
-                throw new Error('Błąd sieci');
-        }).then(resp => {
+        getDataFromAPI('users').then(resp => {
             this.setState({
                 users: resp
             });
