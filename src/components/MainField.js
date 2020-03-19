@@ -34,7 +34,7 @@ class MainField extends Component {
         const {posts, users} = this.state;
         if (!posts || !users) {
             return (
-                <h1>Ładowanie danych ...</h1>
+                <h1 id='data-loading'>Ładowanie danych ...</h1>
             )
         }
         else {

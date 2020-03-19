@@ -3,6 +3,10 @@ import React from 'react';
 //funkcja, która każdemu użytkownikowi przyporządkowuje użytkownika mieszkającego najbliżej
 function ClosestUser(props) {
 
+    if(!props.users){
+        return null;
+    }
+    else {
         const {users} = props;
         const resultsArray = [];
         const degreesToRadians = (degrees) => {
@@ -30,7 +34,7 @@ function ClosestUser(props) {
         return (
             <ul>{resultsArray.map((result, index) => <li key={index}>{result}</li>)}</ul>
         )
-
+    }
 }
 
 export default ClosestUser;

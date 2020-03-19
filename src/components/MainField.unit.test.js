@@ -121,8 +121,8 @@ describe('<MainField />', () => {
             setTimeout(() => {
                 appWrapper.update();
                 const state = appInstance.state;
-                expect(state.posts.length).toBe(3);
-                expect(state.users.length).toBe(3);
+                expect(state.posts.length).toBe(0);
+                expect(state.users.length).toBe(0);
 
                 done();
             });

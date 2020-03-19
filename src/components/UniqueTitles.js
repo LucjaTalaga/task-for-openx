@@ -3,7 +3,11 @@ import React from 'react';
 //funkcja sprawdzająca czy tytuły postów są unikalne, zwracająca listę tych, które nie są
 function UniqueTitles(props) {
 
-        const {posts} = props;
+    const {posts} = props;
+    if (!posts)  {
+        return null;
+    }
+    else {
         const notUnique = [];
         let alreadyNotUnique;
         for (let i = 0; i < posts.length; i++) {
@@ -25,18 +29,18 @@ function UniqueTitles(props) {
                 }
             }
         }
-    if (notUnique.length > 0) {
-        return (
-            <>
-                <h2>Posty, których tytuły nie są unikalne: </h2>
-                <ul>{notUnique.map((title, index) => <li key={index}>{title}</li>)}</ul>
-            </>
-        );
-    }
-    else {
-        return (
-            <h2>Tytuły wszystkich postów są unikalne</h2>
-        )
+        if (notUnique.length > 0) {
+            return (
+                <>
+                    <h2>Posty, których tytuły nie są unikalne: </h2>
+                    <ul>{notUnique.map((title, index) => <li key={index}>{title}</li>)}</ul>
+                </>
+            );
+        } else {
+            return (
+                <h2>Tytuły wszystkich postów są unikalne</h2>
+            )
+        }
     }
 }
 
